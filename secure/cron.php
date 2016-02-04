@@ -497,7 +497,7 @@ if($domoticz) {
 		$rains=str_split($rains, 11);$totalrain=0;$aantal=0;
 		foreach($rains as $rain) {$aantal=$aantal+1;$totalrain=$totalrain+substr($rain,0,3);$averagerain=round($totalrain/$aantal,0);if($aantal==12) break;}
 		if($averagerain>=0) $mc->set('averagerain',$averagerain);
-		$openweathermap=file_get_contents('http://api.openweathermap.org/data/2.5/weather?id=2787891&APPID=ac3485b0bf1a02a81d2525db6515021d&units=metric');
+		$openweathermap=file_get_contents('http://api.openweathermap.org/data/2.5/weather?id=2787491&APPID=ac3485bbf1a02a81d2525db615021d&units=metric');
 		$openweathermap=json_decode($openweathermap,true);
 		if(isset($openweathermap['weather']['0']['icon'])) {
 			$mc->set('weatherimg',$openweathermap['weather']['0']['icon']);
