@@ -1,0 +1,164 @@
+html{min-height:100%;margin:0 auto;}
+body{cursor:default;-webkit-touch-callout: none;-webkit-user-select: none;font-size:80%;font-family:Arial;padding:0px;text-align:center;margin:0 auto;width:98%;background:#888;}
+pre{color:#000; text-align:left}
+a:link{text-decoration:none;color:#000}
+a:visited{text-decoration:none;color:#000}
+a:hover{text-decoration:none;color:#000;}
+a:active{text-decoration:none;color:#000}
+.header{clear:both;padding-bottom:10px;width:90%;margin:0 auto;}
+.footer{clear:both;padding:20px;width:90%;margin:0 auto; color:#aaa;}
+.footer a:visited{text-decoration:none;color:#ccc}
+.footer a:hover{text-decoration:underline;color:#ccc;}
+.footer a:active{text-decoration:underline;color:#ccc}
+.onecolumn{width:98%;max-width:270px;margin:0 auto;}
+.twocolumn{width:98%;max-width:550px;margin:0 auto;}
+.threecolumn{width:98%;max-width:900px;margin:0 auto;}
+.item{float:left;width:19.66%;max-width:297px;border:1px solid #ccc;background:#cacaca;padding-bottom:10px;border-radius:16px;margin-right:3px;margin-bottom:4px; }
+.temprain{width:100%; min-width:312px;max-width:470px;}
+.wide{min-width:502px; max-width:100%}
+.itemd{float:left;border:1px solid #ccc;background:#cacaca;padding-bottom:10px;border-radius:10px;margin-right:3px;margin-bottom:4px;font-size:16px; font-weight:400;}
+.basic{width:297px;}
+.more{width:320px;}
+@media only screen and (max-width:490px){
+	select.abutton{min-width:50px;/*padding-left:18px*/} 
+	.basic{width:48.4%;max-width:160px;border-radius:5px; padding-bottom:0px; margin-bottom:2px;}
+	.isotope{min-width:325px;}
+}
+
+.gradient{background:#888;background:linear-gradient(to bottom, #eee, #999);background-repeat:no-repeat;}
+.number{position:absolute;left:8px;top:5px;display:none;}
+.abutton{border:0px solid #aaa;display:inline-block;padding:9px 0px;text-decoration:none;margin:0;width:62px;box-shadow:0px 0px 0px 1px #999 inset;border-radius:6px; margin-bottom:6px;}
+.abuttond{border:0px solid #aaa;display:inline-block;padding:11px 0px;text-decoration:none;margin:0;width:40px;box-shadow:0px 0px 0px 1px #999 inset;border-radius:6px; margin-bottom:0px;font-size:16px; font-weight:500;}
+.settings{width:100%;max-width:240px;}
+.isotope{height:100%;min-height:80%;margin:0 auto;}
+.isotope:after{content:'';display:block;clear:both;}
+.home{width:100%;}
+.column{float:left; width:310px; margin-right:10px;}
+
+#main{width:100%;margin-bottom:10px; /*height:634px;*/}
+#zone2{width:100%;margin-bottom:10px; /*height:290px;*/}
+#surround{width:100%;margin-bottom:10px;/*height:290px;*/}
+#dialoog{width:100%;}
+#subwoofer{width:100%;}
+.onecolumn{width:98%;max-width:270px;margin:0 auto;}
+.twocolumn{width:98%;max-width:550px;margin:0 auto;}
+.threecolumn{width:98%;max-width:900px;margin:0 auto;}
+.handje{cursor:pointer;}
+.error{color:#B00;padding:12px;border:1px solid #ccc;background:#cacaca;margin:10px;border-radius:16px;}
+.round{border:1px solid #ccc;background:#cacaca;padding-bottom:15px;border-radius:16px;margin-right:3px;margin-bottom:6px;}
+.actions{width:100%;margin:0 auto;border:1px solid #ccc;background:#cacaca;padding-bottom:0px;border-radius:16px;margin-right:3px;margin-bottom:4px;}
+.month{width:80px;}
+.abuttonsomfy{border:0px solid #f00;padding:0px 0px;text-decoration:none;margin:0;width:150px;font-size:0px;}
+.abutton:hover{text-decoration:none !important;}
+.abuttonhistory{width:150px;}
+select.abutton{height:33px;padding-left:20px;margin-bottom:8px;appearance:none;text-indent:0.01px;text-overflow:'';border-radius:6px;}
+select::-ms-expand{display:none;}
+table{text-align:center;}
+table, td{padding:0px 0px 0px 0px; vertical-align:central;}
+.newgroup{border-top:1px solid black; padding-top:10px;}
+.red{ color:#800;}
+.green{color:#050;}
+.blue{color:#008;}
+.temp{ font-size:large;}
+.switchOn{color:#060;}
+.switchOff{color:#B00;}
+.sensorClosed{color:#060;}
+.sensorOff{color:#060;}
+.sensorOpen{color:#B00;}
+.sensorOn{color:#B00;}
+input[type=range] {-webkit-appearance: none;width: 90%;margin: 7.3px 0;}
+input[type=range]:focus {outline: none;}
+input[type=range]::-webkit-slider-runnable-track {width: 90%;height: 11.4px;cursor: pointer;box-shadow: 1px 1px 1px #000000, 0px 0px 1px #0d0d0d;background: rgba(48, 48, 48, 0.78);border-radius: 1.3px;border: 0.2px solid #010101;}
+input[type=range]::-webkit-slider-thumb {box-shadow: 0.9px 0.9px 1px #000031, 0px 0px 0.9px #00004b;border: 1.8px solid #00001e;height: 28px;width: 20px;border-radius: 5px;background: #ffffff;cursor: pointer;-webkit-appearance: none;margin-top: -7.5px;}
+input[type=range]:focus::-webkit-slider-runnable-track {background: rgba(54, 126, 189, 0.78);}
+input[type=range]::-moz-range-track {width: 90%;height: 11.4px;cursor: pointer;box-shadow: 1px 1px 1px #000000, 0px 0px 1px #0d0d0d;background: rgba(48, 48, 48, 0.78);border-radius: 1.3px;border: 0.2px solid #010101;}
+input[type=range]::-moz-range-thumb {box-shadow: 0.9px 0.9px 1px #000031, 0px 0px 0.9px #00004b;border: 1.8px solid #00001e;height: 28px;width: 20px;border-radius: 5px;background: #ffffff;cursor: pointer;}
+input[type=range]::-ms-track {width: 90%;height: 11.4px;cursor: pointer;background: transparent;border-color: transparent;color: transparent;}
+input[type=range]::-ms-fill-lower {background: rgba(42, 100, 149, 0.78);border: 0.2px solid #010101;border-radius: 2.6px;box-shadow: 1px 1px 1px #000000, 0px 0px 1px #00F;}
+input[type=range]::-ms-fill-upper {background: rgba(48, 48, 48, 0.78);border: 0.2px solid #010101;border-radius: 2.6px;box-shadow: 1px 1px 1px #000000, 0px 0px 1px #F00;}
+input[type=range]::-ms-thumb {box-shadow: 0.9px 0.9px 1px #000031, 0px 0px 0.9px #00004b;border: 1.8px solid #00001e;height: 26px;width: 26px;border-radius: 15px;background: #ffffff;cursor: pointer;height: 11.4px;}
+input[type=range]:focus::-ms-fill-lower {background: rgba(48, 48, 48, 0.78);}
+input[type=range]:focus::-ms-fill-upper {background: rgba(54, 126, 189, 0.78);}
+
+dl {
+  width: 100%;
+  overflow: hidden;
+  background: #ff0;
+  padding: 0;
+  margin: 0
+}
+dt {
+  float: left;
+  width: 50%;
+  /* adjust the width; make sure the total of both is 100% */
+  background: #cc0;
+  padding: 0;
+  margin: 0
+}
+dd {
+  float: left;
+  width: 50%;
+  /* adjust the width; make sure the total of both is 100% */
+  background: #dd0
+  padding: 0;
+  margin: 0
+}
+
+/* == iPhone 5 and 5S == Portrait and Landscape */
+@media only screen and (min-device-width: 320px) and (max-device-width: 568px) and (-webkit-min-device-pixel-ratio: 2) {
+
+}
+
+/* == iPhone 5 and 5S == Portrait */
+@media only screen and (min-device-width: 320px) and (max-device-width: 568px) and (-webkit-min-device-pixel-ratio: 2) and (orientation: portrait) {
+}
+
+/* == iPhone 5 and 5S == Landscape */
+@media only screen and (min-device-width: 320px) and (max-device-width: 568px) and (-webkit-min-device-pixel-ratio: 2) and (orientation: landscape) {
+
+}
+
+/* == iPad 1 and 2 == Portrait and Landscape */
+@media only screen and (min-device-width: 768px) and (max-device-width: 1024px) and (-webkit-min-device-pixel-ratio: 1) {
+
+}
+
+/* == iPad 1 and 2 == Portrait */
+@media only screen and (min-device-width: 768px) and (max-device-width: 1024px) and (orientation: portrait) and (-webkit-min-device-pixel-ratio: 1) {
+
+}
+
+/* == iPad 1 and 2 == Landscape */
+@media only screen and (min-device-width: 768px) and (max-device-width: 1024px) and (orientation: landscape) and (-webkit-min-device-pixel-ratio: 1) {
+
+}
+
+/* == Galaxy S4 == Portrait and Landscape */
+@media screen and (device-width: 320px) and (device-height: 640px) and (-webkit-device-pixel-ratio: 3) {
+	
+}
+
+/* == Galaxy S4 == Portrait */
+@media screen and (device-width: 320px) and (device-height: 640px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait) {
+
+}
+
+/* == Galaxy S4 == Landscape */
+@media screen and (device-width: 320px) and (device-height: 640px) and (-webkit-device-pixel-ratio: 3) and (orientation: landscape) {
+
+}
+
+/* == Galaxy Tab 10.1 == Portrait and Landscape */
+@media (min-device-width: 800px) and (max-device-width: 1280px) {
+
+}
+
+/* == Galaxy Tab 10.1 == Portrait */
+@media (max-device-width: 800px) and (orientation: portrait) { 
+
+}
+
+/* == Galaxy Tab 10.1 == Landscape */
+@media (max-device-width: 1280px) and (orientation: landscape) { 
+
+}
