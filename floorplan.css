@@ -23,3 +23,62 @@ select{-webkit-appearance:none;border:0; margin-top:0px;cursor:pointer;}
 .secured{position:absolute;background:repeating-linear-gradient(135deg,rgba(255,0,0,0),rgba(255,0,0,0) 7px,rgba(255,0,0,0) 8px,rgba(255,0,0,0.6) 15px);z-index:-1000;}
 .motion{position:absolute;background:rgba(255,0,0,0.4);z-index:-100;}
 .motionr{position:absolute;background:rgba(255,0,0,0.8);z-index:-100;}
+
+/* == iPhone 5 and 5S == Portrait and Landscape */
+@media only screen and (min-device-width: 320px) and (max-device-width: 568px) and (-webkit-min-device-pixel-ratio: 2) {
+
+}
+
+/* == iPhone 5 and 5S == Portrait */
+@media only screen and (min-device-width: 320px) and (max-device-width: 568px) and (-webkit-min-device-pixel-ratio: 2) and (orientation: portrait) {
+}
+
+/* == iPhone 5 and 5S == Landscape */
+@media only screen and (min-device-width: 320px) and (max-device-width: 568px) and (-webkit-min-device-pixel-ratio: 2) and (orientation: landscape) {
+
+}
+
+/* == iPad 1 and 2 == Portrait and Landscape */
+@media only screen and (min-device-width: 768px) and (max-device-width: 1024px) and (-webkit-min-device-pixel-ratio: 1) {
+
+}
+
+/* == iPad 1 and 2 == Portrait */
+@media only screen and (min-device-width: 768px) and (max-device-width: 1024px) and (orientation: portrait) and (-webkit-min-device-pixel-ratio: 1) {
+
+}
+
+/* == iPad 1 and 2 == Landscape */
+@media only screen and (min-device-width: 768px) and (max-device-width: 1024px) and (orientation: landscape) and (-webkit-min-device-pixel-ratio: 1) {
+
+}
+
+/* == Galaxy S4 == Portrait and Landscape */
+@media screen and (device-width: 320px) and (device-height: 640px) and (-webkit-device-pixel-ratio: 3) {
+	
+}
+
+/* == Galaxy S4 == Portrait */
+@media screen and (device-width: 320px) and (device-height: 640px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait) {
+
+}
+
+/* == Galaxy S4 == Landscape */
+@media screen and (device-width: 320px) and (device-height: 640px) and (-webkit-device-pixel-ratio: 3) and (orientation: landscape) {
+
+}
+
+/* == Galaxy Tab 10.1 == Portrait and Landscape */
+@media (min-device-width: 800px) and (max-device-width: 1280px) {
+
+}
+
+/* == Galaxy Tab 10.1 == Portrait */
+@media (max-device-width: 800px) and (orientation: portrait) { 
+
+}
+
+/* == Galaxy Tab 10.1 == Landscape */
+@media (max-device-width: 1280px) and (orientation: landscape) { 
+
+}
