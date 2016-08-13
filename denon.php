@@ -3,9 +3,9 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <meta name="HandheldFriendly" content="true" /><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black">
-<meta name="viewport" content="width=device-width,height=device-height,user-scalable=yes,minimal-ui" />
+<meta name="viewport" content="width=device-width,height=device-height,user-scalable=yes,initial-scale=0.5, minimal-ui" />
 <title>Denon</title>
-<link href="style.css?v=7" rel="stylesheet" type="text/css" />
+<link href="style.css?v=12" rel="stylesheet" type="text/css" />
 <link rel="icon" type="image/png" href="images/denon.png">
 <link rel="shortcut icon" href="/favicon.ico" />
 <link rel="apple-touch-icon" href="images/denon.png"/>
@@ -30,7 +30,7 @@ h2{font-size:12px}
 </head>
 <body style="max-width:100%;">
 <?php
-$denon_address = 'http://192.168.0.15';
+$denon_address = 'http://192.168.0.4';
 include('secure/settings.php');
 if($home===true) {
 	if(isset($_POST['action'])) {
@@ -43,13 +43,9 @@ if($home===true) {
 	}
 
 	$ctx = stream_context_create(array('http'=>array('timeout' => 2,)));
-	$denonmain = simplexml_load_string(file_get_contents($denon_address.'/goform/formMainZone_MainZoneXml.xml?_='.time(),false, $ctx));
-    $denonmain = json_encode($denonmain);
-    $denonmain = json_decode($denonmain, TRUE);
+    $denonmain = json_decode(json_encode(simplexml_load_string(file_get_contents($denon_address.'/goform/formMainZone_MainZoneXml.xml?_='.time(),false, $ctx))), TRUE);
 	usleep(40000);
-    $denonzone2 = simplexml_load_string(file_get_contents($denon_address.'/goform/formMainZone_MainZoneXml.xml?_='.time().'&ZoneName=ZONE2',false, $ctx));
-    $denonzone2 = json_encode($denonzone2);
-    $denonzone2 = json_decode($denonzone2, TRUE);
+    $denonzone2 = json_decode(json_encode(simplexml_load_string(file_get_contents($denon_address.'/goform/formMainZone_MainZoneXml.xml?_='.time().'&ZoneName=ZONE2',false, $ctx))), TRUE);
 	if(!$denonmain) echo '<div class="error">Kon geen verbinding maken met Denon op '.$denon_address.'<br/>Geen real-time info beschikbaar</div>';
     else $live = true;
     ?>
@@ -61,13 +57,16 @@ if($home===true) {
   	</div>
     <form method="POST">
     <div align="center"><br/><a href='javascript:navigator_Go("denon.php");'>
-        <?php if($live==true) echo '<h1>'.$denonmain['RenameZone']['value']; else echo '<h1>Main Zone'; ?>
+        <?php if($live==true) echo '<h1>'.$denonmain['RenameZone']['value'].' '.$denonmain['ZonePower']['value']; else echo '<h1>Main Zone'; ?>
            
             <?php if($denonmain['ZonePower']['value']=='ON') {
 				$currentvolume = 80+$denonmain['MasterVolume']['value'];
 				if($currentvolume==80) $currentvolume = 0;
-				echo ''.$denonmain['InputFuncSelect']['value'].' @ '.$currentvolume.'';?></h1></a><br/>
+				echo ''.$denonmain['InputFuncSelect']['value'].' @ '.$currentvolume.'';
+			}
+			if($live==true && $denonzone2['ZonePower']['value']=="ON") echo '+ '.$denonzone2['InputFuncSelect']['value'];?></h1></a><br/>
             <?php
+			if($denonmain['ZonePower']['value']=='ON') {
             $levels=array(12,16,18,20,22,24,26,28,30,32,34,36,38,40,42,44,46,48,50,55);
 			foreach($levels as $k) {
 				$setvalue = 80-$k;
@@ -81,51 +80,8 @@ if($home===true) {
             <button name="action" value="MainZone/index.put.asp?cmd0=PutZone_InputFunction/SAT/CBL" class="btn" style="min-width:22%">TV</button>
             <button name="action" value="MainZone/index.put.asp?cmd0=PutZone_InputFunction/DVD" class="btn" style="min-width:23%">Kodi</button>
             <button name="action" value="MainZone/index.put.asp?cmd0=PutZone_InputFunction/AUX1" class="btn" style="min-width:23%">iMac</button><br/><br/>
-            <!-- <button name="action" value="MainZone/index.put.asp?cmd0=PutZone_InputFunction/IRADIO&cmd1=aspMainZone_WebUpdateStatus/&cmd2=PutNetAudioCommand/CurRight&ZoneName=MAIN+ZONE" class="abutton settings gradient">iRadio</button> -->
-        <?php } ?>
-       <!-- <table width="100%" align="center">
-            <tr>
-                <td align="right">Power</td>
-                <td width="300px">
-                    <button name="action" value="MainZone/index.put.asp?cmd0=PutSystem_OnStandby%2FON&cmd1=aspMainZone_WebUpdateStatus%2F" class="btn" style="width:110px">ON</button>
-                    <button name="action" value="MainZone/index.put.asp?cmd0=PutSystem_OnStandby%2FSTANDBY&cmd1=aspMainZone_WebUpdateStatus%2F" class="btn" style="width:110px">OFF</button>
-                </td>
-            
-                <td align="right"><?php //if($live==true) echo $denonmain['RenameZone']['value']; else echo '<h2>Zone 2</h2>'; ?></td>
-                <td width="300px">
-                    <button name="action" value="MainZone/index.put.asp?cmd0=PutZone_OnOff%2FON&cmd1=aspMainZone_WebUpdateStatus%2F" class="btn" style="width:110px">ON</button>
-                    <button name="action" value="MainZone/index.put.asp?cmd0=PutZone_OnOff%2FOFF&cmd1=aspMainZone_WebUpdateStatus%2F" class="btn" style="width:110px">OFF</button>
-                </td>
-            </tr>
-        </table> -->
-  
-        <?php //if($live==true) echo '<h1>'.$denonzone2['RenameZone']['value'].'</h1>'; else echo '<h1>Zone 2</h1>'; ?>
-           
-        <?php if($live==true && $denonzone2['ZonePower']['value']=="ON") {
-			echo '<h2>'.$denonzone2['InputFuncSelect']['value'].' @ '. (80+$denonzone2['MasterVolume']['value']).'</h2>';?>
-        Volume <button name="action" value="MainZone/index.put.asp?cmd0=PutMasterVolumeBtn/>&cmd1=aspMainZone_WebUpdateStatus/&ZoneName=ZONE2" class="btn">UP</button>
-        <button name="action" value="MainZone/index.put.asp?cmd0=PutMasterVolumeBtn/<&cmd1=aspMainZone_WebUpdateStatus/&ZoneName=ZONE2" class="btn">DOWN</button><br/><br/>																			
-        <?php
-        for ($k = 9 ; $k < 56; $k++){ 
-            if ($k % 5 === 0) {
-                $setvalue = 80-$k;
-                $showvalue = $k;
-                echo '<button name="action" value="MainZone/index.put.asp?cmd0=PutMasterVolumeSet/-'.$setvalue.'.0&ZoneName=ZONE2" class="btn">'.$showvalue.'</button>'; 
-            }											
-        }
-		}
-        ?><!--
-        <table width="100%" align="center">
-            <tr>
-                <td align="right"><?php //if($live==true) echo $denonzone2['RenameZone']['value']; else echo '<h2>Zone 2</h2>'; ?></td>
-                <td width="240px">
-                    <button name="action" value="MainZone/index.put.asp?cmd0=PutZone_OnOff%2FON&cmd1=aspMainZone_WebUpdateStatus%2F&ZoneName=ZONE2" class="btn">ON</button>
-                    <button name="action" value="MainZone/index.put.asp?cmd0=PutZone_OnOff%2FOFF&cmd1=aspMainZone_WebUpdateStatus%2F&ZoneName=ZONE2" class="btn">OFF</button>
-                </td>
-            </tr>
-        </table>
-    -->
-    <?php if($denonmain['ZonePower']['value']=='ON') { ?>
+        <?php }
+	if($denonmain['ZonePower']['value']=='ON') { ?>
     <div align="right">
         &nbsp;Dialoog &nbsp;
         <button name="action" value="SETUP/AUDIO/DIALOGLEVEL/s_audio.asp?setPureDirectOn=OFF&setSetupLock=OFF&radioSw=ON&listDialogue=2.0" class="btn" style="min-width:13%">2</button>
