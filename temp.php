@@ -1,76 +1,127 @@
 <?php 
-require_once "secure/header.php"; 
-require_once "secure/functions.php"; 
-require_once "scripts/chart.php";
-if($authenticated == true) {
-	
-	$dbd = new SQLite3('/home/pi/domoticz/domoticz.db');
-	if(isset($_POST['sensor'])) { $sensor = $_POST['sensor']; $sensornaam = $_POST['naam'];} 
-	else {$sensor = 38; $sensornaam = 'Living';}
-	echo '<div class="isotope">';
+require "secure/header.php"; 
+require "secure/settings.php"; 
+require "secure/functions.php"; 
+require "scripts/chart.php";
+if($home === true) {
+	$db = new mysqli('localhost', 'kodi', 'kodi', 'domotica');
+	if($db->connect_errno > 0){ die('Unable to connect to database [' . $db->connect_error . ']');}
+	echo '<div style="width:90%">';
+	$sensor = 147;
+	if(isset($_POST['sensor'])) $sensor=$_POST['sensor'];
 	switch($sensor) {
-		case 210:$setpoint = 85;break;//Living
-		case 231:$setpoint = 86;break;//Badkamer
-		case 232:$setpoint = 87;break;//Kamer
-		case 233:$setpoint = 88;break;//Slaapkamer Tobi
-		case 235:$setpoint = 89;break;//Slaapkamer Julius
-		default:$setpoint = 0;break;
+		case 147:$setpoint=12;$radiator=179;$sensornaam = 'living'; break;//Living
+		case 246:$setpoint=13;$radiator=13;$sensornaam = 'badkamer'; break;//Badkamer
+		case 278:$setpoint=14;$radiator=181;$sensornaam = 'kamer'; break;//Kamer
+		case 356:$setpoint=15;$radiator=183;$sensornaam = 'tobi'; break;//Slaapkamer Tobi
+		case 293:$setpoint=0;$radiator=0;$sensornaam = 'zolder'; break;//Zolder
+		case 244:$setpoint=16;$radiator=203;$sensornaam = 'alex'; break;//Slaapkamer Alex
+		case 999:$setpoint=999;$radiator=999;$sensornaam = 'alles'; break;//Slaapkamer Alex
+		default:$setpoint=0;$radiator=0;$sensornaam = 'buiten';break;
 	}
-	if($setpoint>0) {
-		$sql = "
-			SELECT t.Date, t.Temperature as Temperature, s.Temperature as Setpoint 
-			FROM Temperature t 
-			JOIN Temperature s ON t.Date = s.Date
-			WHERE t.DeviceRowID = $sensor AND s.DeviceRowID = $setpoint
-			ORDER BY t.Date DESC";
-		if(!$result = $dbd->query($sql)){ echo('There was an error running the query [' . $dbd->error . ']');}
-		$times = array();
-		while($row = $result->fetchArray()){
-			array_push($times, array('Date' => $row['Date'], 'Temperature' => $row['Temperature'], 'Setpoint' => $row['Setpoint']));
-		}
-	} else {
-		$sql = "SELECT Date, Temperature FROM Temperature WHERE DeviceRowID = $sensor ORDER BY Date DESC";
-		if(!$result = $dbd->query($sql)){ echo('There was an error running the query [' . $dbd->error . ']');}
-		$times = array();
-		while($row = $result->fetchArray()){
-			array_push($times, array('Date' => $row['Date'], 'Temperature' => $row['Temperature']));
-		}
-	}
-	$timeschart = array_reverse($times);
-	/*$sql = "SELECT Date, Temp_Min, Temp_Max FROM Temperature_Calendar WHERE DeviceRowID = $sensor ORDER BY Date DESC LIMIT 0,30";
-	if(!$result = $dbd->query($sql)){ echo('There was an error running the query [' . $dbd->error . ']');}
-	$dagen = array();
-	while($row = $result->fetchArray()){
-		array_push($dagen, array('Date' => $row['Date'], 'min' => $row['Temp_Min'], 'max' => $row['Temp_Max']));
-	}
-	$dagen = array_reverse($dagen);
-	$sql = "SELECT substr(Date,0,8) AS Date, min(Temp_Min) as min, max(Temp_Max) as max FROM Temperature_Calendar WHERE DeviceRowID = $sensor GROUP BY substr(Date,0,8) ORDER BY Date DESC LIMIT 0,48";
-	if(!$result = $dbd->query($sql)){ echo('There was an error running the query [' . $dbd->error . ']');}
-	$maanden = array();
-	while($row = $result->fetchArray()){
-		array_push($maanden, array('Date' => $row['Date'], 'min' => $row['min'], 'max' => $row['max']));
-	}
-	$maanden = array_reverse($maanden);*/
-		
-	echo '<div class="item temprain gradient" style="min-width:315px"><h2>'.$sensor.' - '.$sensornaam.'</h2>';
-	$args = array('chart'=>'AreaChart','width'=>464,'height'=>650,'hide_legend'=>false,'responsive'=>true,'background_color'=>'#E5E5E5','chart_div'=>'times','margins'=>array(30,10,15,35),);
-	$chart = array_to_chart($timeschart,$args);
+	$time=time();
+	$eendag=$time-86400;$eendagstr=strftime("%Y-%m-%d %H:%M:%S",$eendag);
+	$eenweek=$time-86400*7;$eenweekstr=strftime("%Y-%m-%d %H:%M:%S",$eenweek);
+	$eenmaand=$time-86400*31;$eenmaandstr=strftime("%Y-%m-%d %H:%M:%S",$eenmaand);
+	$sensor = $sensornaam;
+	echo '<form method="POST">
+		<button name="sensor" value="147" class="btn nav">Living</button>
+		<button name="sensor" value="246" class="btn nav">Badk</button>
+		<button name="sensor" value="278" class="btn nav">Kamer</button>
+		<button name="sensor" value="356" class="btn nav">Tobi</button>
+		<button name="sensor" value="244" class="btn nav">Alex</button>
+		<button name="sensor" value="293" class="btn nav">Zolder</button>
+		<button name="sensor" value="329" class="btn nav">Buiten</button>
+		<button name="sensor" value="999" class="btn nav">Alles</button>
+	</form>
+	<h1>'.$sensornaam.'</h1>';
+if($sensor!='alles'){
+	$min=$sensor.'_min';
+	$max=$sensor.'_max';
+	$avg=$sensor.'_avg';
+	$query = "SELECT stamp, $sensor from `temp` WHERE stamp > '$eendagstr'";
+	if($udevice=='iPad') $args = array('chart'=>'AreaChart','width'=>740,'height'=>200,'hide_legend'=>true,'responsive'=>true,'background_color'=>'#111','chart_div'=>'graph','colors'=>array('55FF55'),'margins'=>array(0,0,0,45),'y_axis_text_style'=>array('fontSize'=>18,'color'=>'999999'));
+	else if($udevice=='Mac') $args = array('chart'=>'AreaChart','width'=>1800,'height'=>800,'hide_legend'=>true,'responsive'=>false,'background_color'=>'#111','chart_div'=>'graph','colors'=>array('55FF55'),'margins'=>array(0,0,0,45),'y_axis_text_style'=>array('fontSize'=>18,'color'=>'999999'));
+	else if($udevice=='S4') $args = array('chart'=>'AreaChart','width'=>480,'height'=>200,'hide_legend'=>true,'responsive'=>true,'background_color'=>'#111','chart_div'=>'graph','colors'=>array('55FF55'),'margins'=>array(0,0,0,45),'y_axis_text_style'=>array('fontSize'=>18,'color'=>'999999'));
+	else if($udevice=='Stablet') $args = array('chart'=>'AreaChart','width'=>480,'height'=>200,'hide_legend'=>true,'responsive'=>true,'background_color'=>'#111','chart_div'=>'graph','colors'=>array('55FF55'),'margins'=>array(0,0,0,45),'y_axis_text_style'=>array('fontSize'=>18,'color'=>'999999'));
+	else $args = array('chart'=>'AreaChart','width'=>480,'height'=>200,'hide_legend'=>true,'responsive'=>true,'background_color'=>'#111','chart_div'=>'graph','colors'=>array('55FF55'),'margins'=>array(0,0,0,45),'y_axis_text_style'=>array('fontSize'=>18,'color'=>'999999'));
+	if(!$result = $db->query($query)) { die('There was an error running the query ['.$query .' - ' . $db->error . ']');}
+	while ($row = $result->fetch_assoc()) $graph[] = $row;$result->free();
+	$chart = array_to_chart($graph,$args);
 	echo $chart['script'];
 	echo $chart['div'];
-	echo "</div>";
-/*
-	echo "<div class='item temprain gradient' style='min-width:315px'><h2>Laatste 30 dagen</h2>";
-	$args = array('chart'=>'AreaChart','width'=>464,'height'=>650,'hide_legend'=>true,'responsive'=>true,'background_color'=>'#E5E5E5','chart_div'=>'dagen','margins'=>array(30,10,15,35),);
-	$chart = array_to_chart($dagen,$args);
-	echo $chart['script'];
-	echo $chart['div'];
-	echo "</div>";
+	unset($chart);
+	echo '<br/>';
+	$query = "SELECT stamp, $min, $max, $avg from `temp_hour` where stamp > '$eenweekstr'";
+	if($udevice=='iPad') $argshour = array('width'=>740,'height'=>200,'hide_legend'=>true,'responsive'=>true,'background_color'=>'#111','chart_div'=>'graphhour','colors'=>array('6666FF','FF5555','55FF55'),'margins'=>array(0,0,0,49),'y_axis_text_style'=>array('fontSize'=>18,'color'=>'999999'));
+	else if($udevice=='Mac') $argshour = array('width'=>1800,'height'=>800,'hide_legend'=>true,'responsive'=>true,'background_color'=>'#111','chart_div'=>'graphhour','colors'=>array('6666FF','FF5555','55FF55'),'margins'=>array(0,0,0,49),'y_axis_text_style'=>array('fontSize'=>18,'color'=>'999999'));
+	else if($udevice=='S4') $argshour = array('width'=>480,'height'=>200,'hide_legend'=>true,'responsive'=>true,'background_color'=>'#111','chart_div'=>'graphhour','colors'=>array('6666FF','FF5555','55FF55'),'margins'=>array(0,0,0,49),'y_axis_text_style'=>array('fontSize'=>18,'color'=>'999999'));
+	else if($udevice=='Stablet') $argshour = array('width'=>480,'height'=>200,'hide_legend'=>true,'responsive'=>true,'background_color'=>'#111','chart_div'=>'graphhour','colors'=>array('6666FF','FF5555','55FF55'),'margins'=>array(0,0,0,49),'y_axis_text_style'=>array('fontSize'=>18,'color'=>'999999'));
+	else $argshour = array('width'=>480,'height'=>200,'hide_legend'=>true,'responsive'=>true,'background_color'=>'#111','chart_div'=>'graphhour','colors'=>array('6666FF','FF5555','55FF55'),'margins'=>array(0,0,0,49),'y_axis_text_style'=>array('fontSize'=>18,'color'=>'999999'));
+	if(!$result = $db->query($query)) { die('There was an error running the query ['.$query .' - ' . $db->error . ']');}
+	while ($row = $result->fetch_assoc()) $graphhour[] = $row;$result->free();
+	$charthour = array_to_chart($graphhour,$argshour);
+	echo $charthour['script'];
+	echo $charthour['div'];
+	unset($charthour);
+	echo '<br/>';
+	$query = "SELECT stamp, $min, $max, $avg from `temp_day` where stamp > '$eenmaandstr'";
+	if($udevice=='iPad') $argsday = array('width'=>740,'height'=>200,'hide_legend'=>true,'responsive'=>true,'background_color'=>'#111','chart_div'=>'graphday','colors'=>array('6666FF','FF5555','55FF55'),'margins'=>array(0,0,0,49),'y_axis_text_style'=>array('fontSize'=>18,'color'=>'999999'));
+	else if($udevice=='Mac') $argsday = array('width'=>1800,'height'=>800,'hide_legend'=>true,'responsive'=>true,'background_color'=>'#111','chart_div'=>'graphday','colors'=>array('6666FF','FF5555','55FF55'),'margins'=>array(0,0,0,49),'y_axis_text_style'=>array('fontSize'=>18,'color'=>'999999'));
+	else if($udevice=='S4') $argsday = array('width'=>480,'height'=>200,'hide_legend'=>true,'responsive'=>true,'background_color'=>'#111','chart_div'=>'graphday','colors'=>array('6666FF','FF5555','55FF55'),'margins'=>array(0,0,0,49),'y_axis_text_style'=>array('fontSize'=>18,'color'=>'999999'));
+	else if($udevice=='Stablet') $argsday = array('width'=>480,'height'=>200,'hide_legend'=>true,'responsive'=>true,'background_color'=>'#111','chart_div'=>'graphday','colors'=>array('6666FF','FF5555','55FF55'),'margins'=>array(0,0,0,49),'y_axis_text_style'=>array('fontSize'=>18,'color'=>'999999'));
+	else $argsday = array('width'=>480,'height'=>200,'hide_legend'=>true,'responsive'=>true,'background_color'=>'#111','chart_div'=>'graphday','colors'=>array('6666FF','FF5555','55FF55'),'margins'=>array(0,0,0,49),'y_axis_text_style'=>array('fontSize'=>18,'color'=>'999999'));
+	if(!$result = $db->query($query)) { die('There was an error running the query ['.$query .' - ' . $db->error . ']');}
+	while ($row = $result->fetch_assoc()) $graphday[] = $row;$result->free();
+	$chartday = array_to_chart($graphday,$argsday);
+	echo $chartday['script'];
+	echo $chartday['div'];
+	unset($chart);
 	
-	echo "<div class='item temprain gradient' style='min-width:315px'><h2>Per maanden</h2>";
-	$args = array('chart'=>'AreaChart','width'=>464,'height'=>650,'hide_legend'=>true,'responsive'=>true,'background_color'=>'#E5E5E5','chart_div'=>'maanden','margins'=>array(30,10,15,35),);
-	$chart = array_to_chart($maanden,$args);
+	echo '</center></div>';
+} else {
+	$query = "SELECT * from `temp` WHERE stamp > '$eendagstr'";
+	if($udevice=='iPad') $args = array('width'=>740,'height'=>500,'hide_legend'=>false,'responsive'=>true,'background_color'=>'#000','chart_div'=>'graph','colors'=>array('FFFFFF','FF0000','0000FF','33FF33','FFFF44','8888FF','00FFFF'),'margins'=>array(0,0,0,45),'y_axis_text_style'=>array('fontSize'=>18,'color'=>'999999'),'text_style'=>array('fontSize'=>12,'color'=>'FFFFFF'));
+	else if($udevice=='Mac') $args = array('width'=>1800,'height'=>900,'hide_legend'=>false,'responsive'=>false,'background_color'=>'#000','chart_div'=>'graph','colors'=>array('FFFFFF','FF0000','0000FF','33FF33','FFFF44','8888FF','00FFFF'),'margins'=>array(0,110,0,45),'y_axis_text_style'=>array('fontSize'=>18,'color'=>'999999'),'text_style'=>array('fontSize'=>12,'color'=>'999999'));
+	else if($udevice=='S4') $args = array('width'=>480,'height'=>500,'hide_legend'=>false,'responsive'=>true,'background_color'=>'#000','chart_div'=>'graph','colors'=>array('FFFFFF','FF0000','0000FF','33FF33','FFFF44','8888FF','00FFFF'),'margins'=>array(0,0,0,45),'y_axis_text_style'=>array('fontSize'=>18,'color'=>'999999'),'text_style'=>array('fontSize'=>12,'color'=>'FFFFFF'));
+	else if($udevice=='Stablet') $args = array('width'=>480,'height'=>500,'hide_legend'=>false,'responsive'=>true,'background_color'=>'#000','chart_div'=>'graph','colors'=>array('FFFFFF','FF0000','0000FF','33FF33','FFFF44','8888FF','00FFFF'),'margins'=>array(0,0,0,45),'y_axis_text_style'=>array('fontSize'=>18,'color'=>'999999'),'text_style'=>array('fontSize'=>12,'color'=>'FFFFFF'));
+	else $args = array('width'=>480,'height'=>200,'hide_legend'=>true,'responsive'=>false,'background_color'=>'#000','chart_div'=>'graph','colors'=>array('FFFFFF','FF0000','0000FF','33FF33','FFFF44','8888FF','00FFFF'),'margins'=>array(0,0,0,45),'y_axis_text_style'=>array('fontSize'=>18,'color'=>'999999'),'text_style'=>array('fontSize'=>12,'color'=>'FFFFFF'));
+	if(!$result = $db->query($query)) { die('There was an error running the query ['.$query .' - ' . $db->error . ']');}
+	while ($row = $result->fetch_assoc()) $graph[] = $row;$result->free();
+	$chart = array_to_chart($graph,$args);
 	echo $chart['script'];
-	echo $chart['div'];*/
+	echo $chart['div'];
+	unset($chart);
+	echo '<br/>';
+	$query = "SELECT stamp,buiten_avg as buiten,living_avg as living,badkamer_avg as badkamer,kamer_avg as kamer,tobi_avg as tobi,alex_avg as alex,zolder_avg as zolder from `temp_hour` where stamp > '$eenweekstr'";
+	if($udevice=='iPad') $argshour = array('width'=>740,'height'=>200,'hide_legend'=>true,'responsive'=>true,'background_color'=>'#000','chart_div'=>'graphhour','colors'=>array('FFFFFF','FF0000','0000FF','33FF33','FFFF44','8888FF','00FFFF'),'margins'=>array(0,0,0,49),'y_axis_text_style'=>array('fontSize'=>18,'color'=>'999999'));
+	else if($udevice=='Mac') $argshour = array('width'=>1800,'height'=>800,'hide_legend'=>true,'responsive'=>true,'background_color'=>'#111','chart_div'=>'graphhour','colors'=>array('FFFFFF','FF0000','0000FF','33FF33','FFFF44','8888FF','00FFFF'),'margins'=>array(0,0,0,49),'y_axis_text_style'=>array('fontSize'=>18,'color'=>'999999'),'text_style'=>array('fontSize'=>12,'color'=>'FFFFFF'),'legend_position'=>'bottom');
+	else if($udevice=='S4') $argshour = array('width'=>480,'height'=>200,'hide_legend'=>true,'responsive'=>true,'background_color'=>'#111','chart_div'=>'graphhour','colors'=>array('FFFFFF','FF0000','0000FF','33FF33','FFFF44','8888FF','00FFFF'),'margins'=>array(0,0,0,49),'y_axis_text_style'=>array('fontSize'=>18,'color'=>'999999'),'text_style'=>array('fontSize'=>12,'color'=>'FFFFFF'),'legend_position'=>'bottom');
+	else if($udevice=='Stablet') $argshour = array('width'=>480,'height'=>200,'hide_legend'=>true,'responsive'=>true,'background_color'=>'#111','chart_div'=>'graphhour','colors'=>array('FFFFFF','FF0000','0000FF','33FF33','FFFF44','8888FF','00FFFF'),'margins'=>array(0,0,0,49),'y_axis_text_style'=>array('fontSize'=>18,'color'=>'999999'),'text_style'=>array('fontSize'=>12,'color'=>'FFFFFF'),'legend_position'=>'bottom');
+	else $argshour = array('width'=>480,'height'=>200,'hide_legend'=>true,'responsive'=>true,'background_color'=>'#111','chart_div'=>'graphhour','colors'=>array('FFFFFF','FF0000','0000FF','33FF33','FFFF44','8888FF','00FFFF'),'margins'=>array(0,0,0,49),'y_axis_text_style'=>array('fontSize'=>18,'color'=>'999999'),'text_style'=>array('fontSize'=>12,'color'=>'FFFFFF'),'legend_position'=>'bottom');
+	if(!$result = $db->query($query)) { die('There was an error running the query ['.$query .' - ' . $db->error . ']');}
+	while ($row = $result->fetch_assoc()) $graphhour[] = $row;$result->free();
+	$charthour = array_to_chart($graphhour,$argshour);
+	echo $charthour['script'];
+	echo $charthour['div'];
+	unset($charthour);
+	echo '<br/>';
+	$query = "SELECT stamp,buiten_avg as buiten,living_avg as living,badkamer_avg as badkamer,kamer_avg as kamer,tobi_avg as tobi,alex_avg as alex,zolder_avg as zolder from `temp_day` where stamp > '$eenmaandstr'";
+	if($udevice=='iPad') $argsday = array('width'=>740,'height'=>200,'hide_legend'=>true,'responsive'=>true,'background_color'=>'#111','chart_div'=>'graphday','colors'=>array('FFFFFF','FF0000','0000FF','33FF33','FFFF44','8888FF','00FFFF'),'margins'=>array(0,0,0,49),'y_axis_text_style'=>array('fontSize'=>18,'color'=>'FFFFFF'),'text_style'=>array('fontSize'=>12,'color'=>'FFFFFF'),'legend_position'=>'bottom');
+	else if($udevice=='Mac') $argsday = array('width'=>1800,'height'=>800,'hide_legend'=>true,'responsive'=>true,'background_color'=>'#000','chart_div'=>'graphday','colors'=>array('FFFFFF','FF0000','0000FF','33FF33','FFFF44','8888FF','00FFFF'),'margins'=>array(0,0,0,49),'y_axis_text_style'=>array('fontSize'=>18,'color'=>'FFFFFF'),'text_style'=>array('fontSize'=>12,'color'=>'FFFFFF'),'legend_position'=>'bottom');
+	else if($udevice=='S4') $argsday = array('width'=>480,'height'=>200,'hide_legend'=>true,'responsive'=>true,'background_color'=>'#111','chart_div'=>'graphday','colors'=>array('FFFFFF','FF0000','0000FF','33FF33','FFFF44','8888FF','00FFFF'),'margins'=>array(0,0,0,49),'y_axis_text_style'=>array('fontSize'=>18,'color'=>'FFFFFF'),'text_style'=>array('fontSize'=>12,'color'=>'FFFFFF'),'legend_position'=>'bottom');
+	else if($udevice=='Stablet') $argsday = array('width'=>480,'height'=>200,'hide_legend'=>true,'responsive'=>true,'background_color'=>'#111','chart_div'=>'graphday','colors'=>array('FFFFFF','FF0000','0000FF','33FF33','FFFF44','8888FF','00FFFF'),'margins'=>array(0,0,0,49),'y_axis_text_style'=>array('fontSize'=>18,'color'=>'FFFFFF'),'text_style'=>array('fontSize'=>12,'color'=>'FFFFFF'),'legend_position'=>'bottom');
+	else $argsday = array('width'=>480,'height'=>200,'hide_legend'=>true,'responsive'=>false,'background_color'=>'#111','chart_div'=>'graphday','colors'=>array('FFFFFF','FF0000','0000FF','33FF33','FFFF44','8888FF','00FFFF'),'margins'=>array(0,0,0,49),'y_axis_text_style'=>array('fontSize'=>18,'color'=>'FFFFFF'),'text_style'=>array('fontSize'=>12,'color'=>'FFFFFF'),'legend_position'=>'bottom');
+	if(!$result = $db->query($query)) { die('There was an error running the query ['.$query .' - ' . $db->error . ']');}
+	while ($row = $result->fetch_assoc()) $graphday[] = $row;$result->free();
+	$chartday = array_to_chart($graphday,$argsday);
+	echo $chartday['script'];
+	echo $chartday['div'];
+	unset($chart);
 }
-echo "</div></div></div>";
-//require_once "secure/footer.php";
+	$db->close();
+} else {
+	header("Location: index.php");
+	die("Redirecting to: index.php"); 
+}
+
