@@ -1,0 +1,286 @@
+<?php include "general.php";?>
+html{padding:0px;margin:0px;color:#ccc;font-family:sans-serif;}
+body{margin:0px;background:#000;width:100%}
+h2{font-size:36px;}
+.center{text-align:center;}
+.fix{position:absolute;}
+.i48{width:48px;height:auto;}
+.i60{width:60px;height:auto;}
+.i70{width:70px;height:auto;}
+.i90{width:90px;height:auto;}
+.r0{transform:rotate(0deg);-webkit-transform:rotate(0deg);}
+.r90{transform:rotate(90deg);-webkit-transform:rotate(90deg);}
+.r270{transform:rotate(270deg);-webkit-transform:rotate(270deg);}
+.tmpbg{background-repeat:no-repeat;z-index:-1;left:7px;width:26px;border-radius:8px;}
+.z0{z-index:-10;}
+.z{z-index:10;}
+.z1{z-index:100;}
+
+.red{background:rgba(255,50,50,0.6);padding:1px 2px 1px 2px;}
+.stamp{width:38px;text-align:center;font-size:120%;}
+.secured{background:repeating-linear-gradient(135deg,rgba(255,0,0,0),rgba(255,0,0,0) 7px,rgba(255,0,0,0) 8px,rgba(255,0,0,0.6) 15px);z-index:-1000;}
+.motion{background:rgba(255,0,0,0.4);z-index:-100;}
+.motionr{background:rgba(255,0,0,0.8);z-index:-100;}
+
+<?php if($udevice=='other'||$udevice=='iphone'){ ?>
+.dimmer{top:0px;left:0px;height:735px;width:390px;padding:50px;background:#111;z-index:1000;}
+.dimmerlevel{top:20px;left:25px;width:19px;color:#333;font-size:90%;}
+.dimlevel{background-color:#333;color:#eee;font-size:300%;padding:0px;margin-bottom:2px;text-align:center;width:18.5%;height:89px;}
+.dimlevela{background-color:#ffba00;color:#000;}
+.clock{top:5px;left:266px;width:142px;text-align:center;font-size:33px;font-weight:500;color:#CCC;}
+.floorplan{cursor:default;-webkit-touch-callout:none;-webkit-user-select:none;-moz-user-select:none;font-size:80%;font-family:Arial;padding:0px;text-align:center;background:#000;background-image:url(/images/HomeZw.png);background-repeat:no-repeat;background-position:-4px -15px;height:848px;width:486px;padding-top:0px;margin:0 auto;}
+.buiten_temp{top:125px;left:0px;height:270px;width:80px;}
+.poort{top:262px;left:404px;width:25px;height:128px;background:rgba(255,0,0,1);z-index:-10;}
+.achterdeur{top:264px;left:81px;width:30px;height:48px;background:rgba(255,0,0,1);z-index:-10;}
+.raamliving{top:46px;left:81px;width:8px;height:165px;background:rgba(255,0,0,1);z-index:-10;}
+.raamtobi{top:449px;left:81px;width:7px;height:43px;background:rgba(255,0,0,1);z-index:-10;}
+.raamalex{top:569px;left:81px;width:7px;height:43px;background:rgba(255,0,0,1);z-index:-10;}
+.raamkamer{top:586px;left:481px;width:7px;height:43px;background:rgba(255,0,0,1);z-index:-10;}
+.deurbadkamer{top:421px;left:341px;width:7px;height:46px;background:rgba(255,0,0,1);z-index:-10;}
+.eettafel{top:110px;left:245px;}
+.zithoek{top:110px;left:110px;}
+.kamer{top:550px;left:320px;}
+.tobi{top:432px;left:132px;}
+.alex{top:555px;left:142px;}
+.living_temp{top:120px;left:190px;}
+.badkamer_temp{top:403px;left:441px;}
+.kamer_temp{top:530px;left:430px;}
+.tobi_temp{top:433px;left:94px;}
+.alex_temp{top:544px;left:94px;}
+.zolder_temp{top:690px;left:125px;}
+.tvled{top:7px;left:87px;}#tvled{height:50px;width:auto;}
+.kristal{top:7px;left:147px;}#kristal{height:50px;width:auto;}
+.bureel{top:7px;left:208px;}#bureel{height:50px;width:auto;}
+.inkom{top:51px;left:349px;}#inkom{height:50px;width:auto;}
+.keuken{top:159px;left:390px;}#keuken{height:50px;width:auto;}
+.wasbak{top:145px;left:345px;}#wasbak{height:40px;width:auto;}
+.kookplaat{top:115px;left:386px;}#kookplaat{height:40px;width:auto;}
+.werkblad{top:208px;left:434px;}#werkblad{height:40px;width:auto;}
+.lichtbadkamer1{top:424px;left:380px;}#lichtbadkamer1{height:60px;width:auto;}
+.lichtbadkamer2{top:471px;left:341px;}#lichtbadkamer2{height:40px;width:auto;}
+.voordeur{top:59px;left:442px;}#voordeur{height:42px;width:auto;}
+.hall{top:410px;left:252px;}#hall{height:50px;width:auto;}
+.garage{top:305px;left:209px;}#garage{height:60px;width:auto;}
+.zolderg{top:315px;left:140px;}#zolderg{height:42px;width:auto;}
+.lichten_auto{top:312px;left:299px;}#lichten_auto{height:40px;width:auto;}
+.weg{top:257px;left:417px;}#weg{height:65px;width:auto;}
+.slapen{top:331px;left:417px;}#slapen{height:65px;width:auto;}
+.terras{top:7px;left:16px;}#terras{height:48px;width:auto;}
+.tuin{top:66px;left:16px;}#tuin{height:48px;width:auto;}
+.zolder{top:710px;left:260px;}#zolder{height:60px;width:auto;}
+.bureeltobi{top:730px;left:400px;}#bureeltobi{height:40px;width:auto;}
+.badkamervuur{top:403px;left:346px;}#badkamervuur{height:28px;width:auto;}
+.Kerstboom{top:200px;left:90px;}#Kerstboom{height:46px;width:auto;}
+.denonicon{top:350px;left:13px;}
+.radioluisteren{top:440px;left:2px;}
+.tvkijken{top:510px;left:8px;}
+.kodikijken{top:600px;left:14px;}
+.heatingicon{top:690px;left:14px;}
+.floorplan2icon{top:776px;left:9px;}
+.zliving{top:51px;left:89px;width:249px;height:197px;}
+.zkeuken{top:115px;left:345px;width:129px;height:133px;}
+.zinkom{top:51px;left:345px;width:129px;height:56px;}
+.zgarage{top:256px;left:89px;width:315px;height:139px;}
+.zhalla{top:403px;left:214px;width:127px;height:66px;}
+.zhallb{top:469px;left:214px;width:44px;height:66px;}
+.tbelknop{top:17px;left:466px;}
+.tpirgarage{top:256px;left:300px;}
+.tpirliving{top:230px;left:300px;}
+.tpirlivingR{top:230px;left:105px;}
+.tpirkeuken{top:115px;left:345px;}
+.tpirinkom{top:89px;left:398px;}
+.tpirhall{top:403px;left:215px;}
+.tachterdeur{top:278px;left:74px;}
+.tpoort{top:315px;left:376px;}
+.traamliving{top:72px;left:74px;}
+.traamtobi{top:462px;left:74px;}
+.traamalex{top:581px;left:74px;}
+.traamkamer{top:598px;left:460px;}
+.tdeurbadkamer{top:435px;left:329px;}
+.zoldertrap{top:675px;left:190px;}
+.weather{top:280px;left:11px;}
+.zon{top:224px;left:4px;}
+.floorplanstats{top:810px;left:94px;}
+
+<?php }elseif($udevice=='ipad'){ ?>
+  .btn{color:#ccc;background-color:#333;min-width:1.3em;text-align:center;display:inline-block;margin-bottom:0;cursor:pointer;border:1px solid transparent;padding:5px;margin:3px 0px 2px 4px;font-size:1em;-webkit-appearance:none;-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none;}
+  .btn:hover{color:#fff;}
+@media only screen and (orientation: portrait) {
+  .dimmer{top:0px;left:0px;height:735px;width:390px;padding:50px;background:#111;z-index:1000;}
+  .dimmerlevel{top:20px;left:25px;width:19px;color:#333;font-size:90%;}
+  .dimlevel{background-color:#333;color:#eee;font-size:300%;padding:0px;text-align:center;width:19.4%;height:91px;}
+  .dimlevela{background-color:#ffba00;color:#000;}
+  .floorplan{cursor:default;-webkit-touch-callout:none;-webkit-user-select:none;-moz-user-select:none;font-size:80%;font-family:Arial;padding:0px;text-align:center;background:#000;background-image:url(/images/HomeZw.png?v=2); background-repeat: no-repeat;background-position:96px -19px;background-size:80.1%;padding-top:0px;margin:0 auto;}
+  .clock{top:8px;left:420px;width:169px;text-align:center;font-size:40px;font-weight:500;color:#CCC;}
+  .dimmer{height:935px;width:665px;padding:50px;}
+  .dimlevel{height:113px;}
+  .buiten_temp{top:125px;left:100px;height:270px;width:80px;}
+  .poort{top:326px;left:589px;width:25px;height:128px;background:rgba(255,0,0,1);z-index:-10;}
+  .achterdeur{top:318px;left:198px;width:30px;height:56px;background:rgba(255,0,0,1);z-index:-10;}
+  .raamliving{top:54px;left:198px;width:9px;height:200px;background:rgba(255,0,0,1);z-index:-10;}
+  .raamtobi{top:539px;left:198px;width:9px;height:53px;background:rgba(255,0,0,1);z-index:-10;}
+  .raamalex{top:684px;left:198px;width:9px;height:53px;background:rgba(255,0,0,1);z-index:-10;}
+  .raamkamer{top:706px;left:682px;width:9px;height:53px;background:rgba(255,0,0,1);z-index:-10;}
+  .deurbadkamer{top:506px;left:513px;width:9px;height:56px;background:rgba(255,0,0,1);z-index:-10;}
+  .eettafel{top:140px;left:400px;}
+  .zithoek{top:140px;left:230px;}
+  .kamer{top:660px;left:490px;}
+  .tobi{top:535px;left:260px;}
+  .alex{top:680px;left:280px;}
+  .living_temp{top:170px;left:330px;}
+  .badkamer_temp{top:495px;left:630px;}
+  .kamer_temp{top:640px;left:630px;}
+  .tobi_temp{top:520px;left:204px;}
+  .alex_temp{top:665px;left:204px;}
+  .zolder_temp{top:845px;left:225px;}
+
+  .tvled{top:11px;left:205px;}#tvled{height:55px;width:auto;}
+  .kristal{top:11px;left:272px;}#kristal{height:55px;width:auto;}
+  .bureel{top:11px;left:340px;}#bureel{height:55px;width:auto;}
+  .inkom{top:70px;left:550px;}#inkom{height:50px;width:auto;}
+  .keuken{top:195px;left:570px;}#keuken{height:50px;width:auto;}
+  .wasbak{top:180px;left:514px;}#wasbak{height:45px;width:auto;}
+  .kookplaat{top:140px;left:555px;}#kookplaat{height:45px;width:auto;}
+  .werkblad{top:254px;left:622px;}#werkblad{height:45px;width:auto;}
+  .lichtbadkamer1{top:515px;left:560px;}#lichtbadkamer1{height:60px;width:auto;}
+  .lichtbadkamer2{top:565px;left:519px;}#lichtbadkamer2{height:40px;width:auto;}
+  .voordeur{top:78px;left:678px;}#voordeur{height:45px;width:auto;}
+  .hall{top:500px;left:395px;}#hall{height:50px;width:auto;}
+  .garage{top:360px;left:390px;}#garage{height:60px;width:auto;}
+  .zolderg{top:366px;left:290px;}#zolderg{height:45px;width:auto;}
+  .lichten_auto{top:312px;left:399px;}#lichten_auto{height:45px;width:auto;}
+  .weg{top:310px;left:700px;}#weg{height:65px;width:auto;}
+  .slapen{top:410px;left:700px;}#slapen{height:65px;width:auto;}
+  .terras{top:7px;left:116px;}#terras{height:50px;width:auto;}
+  .tuin{top:70px;left:116px;}#tuin{height:50px;width:auto;}
+  .zolder{top:840px;left:410px;}#zolder{height:60px;width:auto;}
+  .bureeltobi{top:940px;left:600px;}#bureeltobi{height:42px;width:auto;}
+  .badkamervuur{top:487px;left:520px;}#badkamervuur{height:28px;width:auto;}
+	.Kerstboom{top:230px;left:190px;}#Kerstboom{height:46px;width:auto;}
+  .denonicon{top:360px;left:117px;}
+  .radioluisteren{top:476px;left:106px;}
+  .tvkijken{top:592px;left:110px;}
+  .kodikijken{top:708px;left:116px;}
+  .heatingicon{top:824px;left:116px;}
+  .floorplan2icon{top:940px;left:111px;}
+  .zliving{top:61px;left:207px;width:302px;height:237px;}
+  .zkeuken{top:138px;left:517px;width:156px;height:160px;}
+  .zinkom{top:61px;left:518px;width:155px;height:67px;}
+  .zgarage{top:308px;left:207px;width:382px;height:168px;}
+  .zhalla{top:485px;left:359px;width:154px;height:79px;}
+  .zhallb{top:564px;left:359px;width:54px;height:80px;}
+  .belknop{top:17px;left:566px;}
+  .pirgarage{top:280px;left:420px;}
+  .pirliving{top:230px;left:430px;}
+  .pirlivingR{top:230px;left:205px;}
+  .pirkeuken{top:115px;left:450px;}
+  .pirinkom{top:89px;left:498px;}
+  .pirhall{top:403px;left:315px;}
+  .tbelknop{top:17px;left:666px;}
+  .tpirgarage{top:306px;left:470px;}
+  .tpirliving{top:281px;left:470px;}
+  .tpirlivingR{top:281px;left:315px;}
+  .tpirkeuken{top:135px;left:520px;}
+  .tpirinkom{top:48px;left:558px;}
+  .tpirhall{top:484px;left:360px;}
+  .tachterdeur{top:340px;left:190px;}
+  .tpoort{top:385px;left:559px;}
+  .traamliving{top:72px;left:190px;}
+  .traamtobi{top:558px;left:190px;}
+  .traamalex{top:698px;left:190px;}
+  .traamkamer{top:720px;left:664px;}
+  .tdeurbadkamer{top:525px;left:486px;}
+  .zoldertrap{top:800px;left:310px;}
+  .weather{top:280px;left:116px;}
+  .zon{top:230px;left:109px;}
+  .floorplanstats{top:980px;left:210px;}
+}
+@media only screen and (orientation: landscape) {
+  .dimmer{top:0px;height:735px;width:100%;padding:50px;background:#111;z-index:1000;margin:0 auto;}
+  .dimmerlevel{top:20px;left:25px;width:19px;color:#333;font-size:90%;}
+  .dimlevel{background-color:#333;color:#eee;font-size:300%;padding:0px;text-align:center;width:140px;height:100px;}
+  .dimlevela{background-color:#ffba00;color:#000;}
+  .floorplan{cursor:default;-webkit-touch-callout:none;-webkit-user-select:none;-moz-user-select:none;font-size:80%;font-family:Arial;padding:0px;text-align:center;background:#000;background-image:url(/images/HomeZw.png?v=2);background-repeat:no-repeat;background-position:196px -15px;background-size:44.8%;padding-top:0px;margin:0 auto;}
+  .clock{top:2px;left:438px;width:128px;text-align:center;font-size:33px;font-weight:500;color:#CCC;}
+  .buiten_temp{top:125px;left:190px;height:270px;width:80px;}
+  .poort{top:240px;left:563px;width:25px;height:102px;background:rgba(255,0,0,1);z-index:-10;}
+  .achterdeur{top:238px;left:272px;width:30px;height:41px;background:rgba(255,0,0,1);z-index:-10;}
+  .raamliving{top:40px;left:272px;width:7px;height:148px;background:rgba(255,0,0,1);z-index:-10;}
+  .raamtobi{top:400px;left:272px;width:7px;height:41px;background:rgba(255,0,0,1);z-index:-10;}
+  .raamalex{top:509px;left:272px;width:7px;height:41px;background:rgba(255,0,0,1);z-index:-10;}
+  .raamkamer{top:526px;left:633px;width:7px;height:41px;background:rgba(255,0,0,1);z-index:-10;}
+  .deurbadkamer{top:377px;left:507px;width:7px;height:41px;background:rgba(255,0,0,1);z-index:-10;}
+  .eettafel{top:90px;left:420px;}
+  .zithoek{top:90px;left:290px;}
+  .kamer{top:480px;left:480px;}
+  .tobi{top:385px;left:319px;}
+  .alex{top:494px;left:342px;}
+  .living_temp{top:120px;left:372px;}
+  .badkamer_temp{top:354px;left:590px;}
+  .kamer_temp{top:470px;left:590px;}
+  .tobi_temp{top:370px;left:280px;}
+  .alex_temp{top:480px;left:280px;}
+  .zolder_temp{top:610px;left:280px;}
+
+  .tvled{top:7px;left:282px;}#tvled{height:40px;width:auto;}
+  .kristal{top:7px;left:335px;}#kristal{height:40px;width:auto;}
+  .bureel{top:7px;left:388px;}#bureel{height:40px;width:auto;}
+  .inkom{top:51px;left:510px;}#inkom{height:40px;width:auto;}
+  .keuken{top:140px;left:560px;}#keuken{height:40px;width:auto;}
+  .wasbak{top:140px;left:509px;}#wasbak{height:36px;width:auto;}
+  .kookplaat{top:100px;left:556px;}#kookplaat{height:36px;width:auto;}
+  .werkblad{top:184px;left:586px;}#werkblad{height:36px;width:auto;}
+  .lichtbadkamer1{top:380px;left:544px;}#lichtbadkamer1{height:50px;width:auto;}
+  .lichtbadkamer2{top:413px;left:510px;}#lichtbadkamer2{height:36px;width:auto;}
+  .voordeur{top:59px;left:642px;}#voordeur{height:42px;width:auto;}
+  .hall{top:363px;left:425px;}#hall{height:50px;width:auto;}
+  .garage{top:260px;left:390px;}#garage{height:60px;width:auto;}
+  .zolderg{top:270px;left:320px;}#zolderg{height:42px;width:auto;}
+  .lichten_auto{top:312px;left:499px;}#lichten_auto{height:40px;width:auto;}
+  .weg{top:230px;left:650px;}#weg{height:55px;width:auto;}
+  .slapen{top:310px;left:650px;}#slapen{height:55px;width:auto;}
+  .terras{top:6px;left:206px;}#terras{height:42px;width:auto;}
+  .tuin{top:56px;left:206px;}#tuin{height:42px;width:auto;}
+  .zolder{top:630px;left:440px;}#zolder{height:60px;width:auto;}
+  .bureeltobi{top:690px;left:570px;}#bureeltobi{height:40px;width:auto;}
+  .badkamervuur{top:360px;left:510px;}#badkamervuur{height:28px;width:auto;}
+ .Kerstboom{top:170px;left:290px;}#Kerstboom{height:46px;width:auto;}
+ .denonicon{top:10px;left:80px;}
+  .radioluisteren{top:144px;left:70px;}
+  .tvkijken{top:278px;left:74px;}
+  .kodikijken{top:412px;left:79px;}
+  .heatingicon{top:546px;left:80px;}
+  .floorplan2icon{top:680px;left:75px;}
+  .zliving{top:44px;left:279px;width:225px;height:178px;}
+  .zkeuken{top:102px;left:510px;width:116px;height:120px;}
+  .zinkom{top:44px;left:510px;width:116px;height:50px;}
+  .zgarage{top:229px;left:279px;width:284px;height:125px;}
+  .zhalla{top:361px;left:392px;width:114px;height:59px;}
+  .zhallb{top:420px;left:392px;width:40px;height:60px;}
+  .belknop{top:17px;left:466px;}
+  .pirgarage{top:256px;left:270px;}
+  .pirliving{top:230px;left:300px;}
+  .pirlivingR{top:230px;left:105px;}
+  .pirkeuken{top:115px;left:345px;}
+  .pirinkom{top:89px;left:398px;}
+  .pirhall{top:403px;left:215px;}
+  .tbelknop{top:17px;left:622px;}
+  .tpirgarage{top:228px;left:470px;}
+  .tpirliving{top:205px;left:470px;}
+  .tpirlivingR{top:205px;left:305px;}
+  .tpirkeuken{top:100px;left:507px;}
+  .tpirinkom{top:32px;left:531px;}
+  .tpirhall{top:359px;left:389px;}
+  .tachterdeur{top:249px;left:260px;}
+  .tpoort{top:280px;left:534px;}
+  .traamliving{top:66px;left:260px;}
+  .traamtobi{top:411px;left:260px;}
+  .traamalex{top:519px;left:260px;}
+  .traamkamer{top:534px;left:613px;}
+  .tdeurbadkamer{top:385px;left:489px;}
+  .zoldertrap{top:605px;left:360px;}
+  .weather{top:300px;left:209px;}
+  .zon{top:230px;left:195px;}
+  .floorplanstats{top:730px;left:815px;}
+  }
+<?php } ?>
