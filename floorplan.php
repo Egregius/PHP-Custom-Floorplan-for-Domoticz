@@ -1,6 +1,8 @@
-<?php $start=microtime(true);require "secure/settings.php";require "secure/functions.php";if(authenticated){
+<?php
+$start=microtime(true);require "secure/settings.php";require "secure/functions.php";if(home){
 error_reporting(E_ALL);
 ini_set("display_errors","on");
+
 echo '
 <html>
 	<head>
@@ -24,166 +26,92 @@ echo '
 	</head>
 	<body class="floorplan">
 		';
-if(isset($_POST['Schakel']))
-	Schakel($_POST['Schakel'],$_POST['Actie'],$_POST['Naam']);
-elseif(isset($_POST['Udevice']))
-	Udevice($_POST['Udevice'],$_POST['Naam']);
-elseif(isset($_POST['dimmer']))
-{
-	if(isset($_POST['dimlevelon_x']))
-	{
+if(isset($_POST['Schakel']))Schakel($_POST['Schakel'],$_POST['Actie'],$_POST['Naam']);
+elseif(isset($_POST['Udevice']))Udevice($_POST['Udevice'],$_POST['Naam']);
+elseif(isset($_POST['dimmer'])){
+	if(isset($_POST['dimlevelon_x'])){
 		Dim($_POST['dimmer'],100,$_POST['Naam']);
-		cset('timedimmer'.$_POST['Naam'],$time);
-		cset('dimmer'.$_POST['Naam'],0);
-	}
-	elseif(isset($_POST['dimleveloff_x']))
-	{
+		apcu_store('dimtime'.$_POST['Naam'],$time);
+		apcu_store('dimaction'.$_POST['Naam'],0);
+	}elseif(isset($_POST['dimleveloff_x'])){
 		Dim($_POST['dimmer'],0,$_POST['Naam']);
-		cset('timedimmer'.$_POST['Naam'],$time);
-		cset('dimmer'.$_POST['Naam'],0);
-	}
-	elseif(isset($_POST['dimsleep_x']))
-	{
-		lg('>>> '.$user.' activated dimmer sleep for '.$_POST['Naam']);
-		cset('dimmer'.$_POST['Naam'],1);
-	}
-	elseif(isset($_POST['dimwake_x']))
-	{
-		lg('>>> '.$user.' activated dimmer wake for '.$_POST['Naam']);
+		apcu_store('dimtime'.$_POST['Naam'],$time);
+		apcu_store('dimaction'.$_POST['Naam'],0);
+	}elseif(isset($_POST['dimsleep_x'])){
+		lg('=> '.$user.' => activated dimmer sleep for '.$_POST['Naam']);
+		apcu_store('dimaction'.$_POST['Naam'],1);
+	}elseif(isset($_POST['dimwake_x'])){
+		lg('=> '.$user.' => activated dimmer wake for '.$_POST['Naam']);
 		Dim($_POST['dimmer'],$_POST['dimwakelevel']+1,$_POST['Naam']);
-		cset('dimmer'.$_POST['Naam'],2);
-	}
-	else
-	{
+		apcu_store('dimaction'.$_POST['Naam'],2);
+	}else{
 		Dim($_POST['dimmer'],$_POST['dimlevel'],$_POST['Naam']);
-		cset('dimmer'.$_POST['Naam'],0);
+		apcu_store('dimaction'.$_POST['Naam'],0);
 	}
 }
-elseif(isset($_POST['Naam']))
-{
-	switch($_POST['Naam'])
-	{
-		case 'radioluisteren':
-			Udevice(193,0,'On','radio luisteren');
-			break;
-		case 'tvkijken':
-			Udevice(191,0,'On','tv kijken');
-			break;
-		case 'kodikijken':
-			Udevice(192,0,'On','kodi kijken');
-			break;
+elseif(isset($_POST['Denon'])){header("Location: /denon.php");die("Redirecting to: /denon.php");}
+if(isset($_POST['Naam'])){
+	switch($_POST['Naam']){
+		case 'radioluisteren':Udevice(193,0,'On','radio luisteren');break;
+		case 'tvkijken':Udevice(191,0,'On','tv kijken');break;
+		case 'kodikijken':Udevice(192,0,'On','kodi kijken');break;
+		case 'kerstboom':sleep(1);Schakel($_POST['Schakel'],$_POST['Actie'],$_POST['Naam']);break;
+		case 'badkamervuur':sleep(1);Schakel($_POST['Schakel'],$_POST['Actie'],$_POST['Naam']);break;
+		case 'bureeltobi':sleep(1);Schakel($_POST['Schakel'],$_POST['Actie'],$_POST['Naam']);break;
 	}
-	//if(Schakel($idx,'On',$_POST['Naam'])=='ERROR')echo '<div class="message" class="balloon">Scene '.$_POST['Naam'].' activeren'.'<br/>ERROR</div>';
 }
-$weer=unserialize(cget('weer'));
+$weer=unserialize(apcu_fetch('weer'));
 $domostart=microtime(true);
-$domoticz=json_decode(curl('http://127.0.0.1:8084/json.htm?type=devices&plan=2',true,$ctx),true);
+$domoticz=json_decode(file_get_contents('http://127.0.0.1:8084/json.htm?type=devices&plan=2'),true);
 $domotime=microtime(true)-$domostart;
 if($domoticz){
-	foreach($domoticz['result'] as $dom)
-	{
+	foreach($domoticz['result'] as $dom){
 		$name=$dom['Name'];
-		isset($dom['SwitchType'])
-			?$SwitchType=$dom['SwitchType']
-			:'none';
-		if($SwitchType=='Dimmer')
-		{
+		isset($dom['SwitchType'])?$SwitchType=$dom['SwitchType']:'none';
+		if($SwitchType=='Dimmer'){
 			${'DI'.$name}=$dom['idx'];
 			$dom['Status']=='Off'?${'D'.$name}='Off':${'D'.$name}='On';
 			$dom['Status']=='Off'?${'Dlevel'.$name}=0:${'Dlevel'.$name}=$dom['Level'];
-		}
-		else
-		{
+		}else{
 			${'S'.$name}=$dom['Data'];
 			${'SI'.$name}=$dom['idx'];
 			${'ST'.$name}=strtotime($dom['LastUpdate']);
-			if($name=='achterdeur')
-				$Sachterdeur=='Open'
-					?$Sachterdeur='Closed'
-					:$Sachterdeur='Open';
+			if($name=='achterdeur')$Sachterdeur=='Open'?$Sachterdeur='Closed':$Sachterdeur='Open';
 		}
 	}
-if(isset($_POST['Schakel']))
-{
-	if($_POST['Schakel']==1||$_POST['Schakel']==2)
-	{
-		if($Sraamliving=='Open')
-			echo '<script language="javascript">alert("WARNING:Raam living open!")</script>';
-		if($Sachterdeur=='Open')
-			echo '<script language="javascript">alert("WARNING:Achterdeur open!")</script>';
-		if($Spoort=='Open')
-			echo '<script language="javascript">alert("WARNING:Poort open!")</script>';
+if(isset($_POST['Schakel'])){
+	if($_POST['Schakel']==1||$_POST['Schakel']==2){
+		if($Sraamliving=='Open')echo '<script language="javascript">alert("WARNING:Raam living open!")</script>';
+		if($Sachterdeur=='Open')echo '<script language="javascript">alert("WARNING:Achterdeur open!")</script>';
+		if($Spoort=='Open')echo '<script language="javascript">alert("WARNING:Poort open!")</script>';
 	}
 }
 echo '
-	<div class="fix clock">
-		<a href=\'javascript:navigator_Go("floorplan.php");\'>'.strftime("%k:%M:%S",$time).'</a>
-	</div>
-	<div class="fix buiten_temp">';
-$temp=$weer['buiten_temp'];
-$hoogte=$temp*3;
-if($hoogte>88)
-	$hoogte=88;
-elseif($hoogte<20)
-	$hoogte=20;
-$top=88-$hoogte;
-if($top<0)
-	$top=0;
-$top=$top+5;
-switch($temp)
-{
-	case $temp>=22:
-		$tcolor='F00';
-		$dcolor='55F';
-		break;
-	case $temp>=20:
-		$tcolor='D12';
-		$dcolor='44F';
-		break;
-	case $temp>=18:
-		$tcolor='B24';
-		$dcolor='33F';
-		break;
-	case $temp>=15:
-		$tcolor='93B';
-		$dcolor='22F';
-		break;
-	case $temp>=10:
-		$tcolor='64D';
-		$dcolor='11F';
-		break;
-	default:
-		$tcolor='55F';
-		$dcolor='00F';
-}
-echo '
-		<div class="fix z" style="top:0px;left:20px;">
-			<div class="fix tmpbg" style="top:'.number_format($top,0).'px;left:8px;width:26px;height:'.number_format($hoogte,0).'px;background:linear-gradient(to bottom, #'.$tcolor.', #'.$dcolor.');">
-			</div>
-			<a href=\'javascript:navigator_Go("temp.php?sensor=999");\'>
-				<input type="image" src="/images/temp.png" height="100px" width="auto"/>
-			</a>
-			<div class="fix center" style="top:73px;left:5px;width:32px;">
-				'.$temp.'
-			</div>
-		</div>
-	</div>
-	<div class="fix center zon">
-		'.number_format((filter_var($Szon, FILTER_SANITIZE_NUMBER_INT)/100),0,'.','.').' Watt<br/>
-		Regen:<br>';
-		$regen=$weer['buien'];if($regen==0)echo 0;elseif($regen>=10)echo number_format($regen,1);else echo number_format($regen,2);
-		echo ' mm/u<br/>
-		'.number_format($weer['wind'],0).'kph '.$weer['wind_dir'].'
-	</div>
+	<div class="fix clock"><a href=\'javascript:navigator_Go("floorplan.php");\'>'.strftime("%k:%M:%S",$time).'</a></div>
+	<div class="fix center zon">';
+	$zon=apcu_fetch('zon');
+	if($zon>0) echo $zon.' Watt<br/>';
+	$regen=apcu_fetch('buien');
+	if($regen>0){
+		echo 'Regen:<br>';
+		if($regen>=10)echo number_format($regen,1);else echo number_format($regen,2);
+		echo ' mm/u<br/>';
+	}
+	echo apcu_fetch('wind').'kph '.apcu_fetch('wind_dir').'
+	</div>';
+	$icon=apcu_fetch('icon');
+	if(!empty($icon)) echo '
 	<div class="fix weather">
 		<a href=\'javascript:navigator_Go("http://www.wunderground.com/global/stations/06414.html");\'>
-			<img src="'.$weer['icon'].'"/>
+			<img src="'.$icon.'"/>
 		</a>
-	</div>
+	</div>';
+	echo '
 	<div class="fix denonicon">
-		<a href=\'javascript:navigator_Go("denon.php");\'>
-			<img src="/images/denon.png" class="i48">
-		</a>
+		<form method="POST">
+			<input type="hidden" name="Denon" value="Denon">
+			<input type="image" src="/images/denon.png" class="i48">
+		</form>
 	</div>
 	<div class="fix radioluisteren">
 		<form method="POST">
@@ -246,6 +174,7 @@ Schakelaar('zolder','Light');
 Schakelaar('bureeltobi','Plug');
 Schakelaar('badkamervuur','Plug');
 Schakelaar('kerstboom','Kerstboom');
+Thermometer('buiten_temp');
 Thermometer('living_temp');
 Thermometer('badkamer_temp');
 Thermometer('kamer_temp');
@@ -255,60 +184,51 @@ Thermometer('zolder_temp');
 Blinds('zoldertrap');
 if($Sweg=='On'||$Sslapen=='On'){Secured('zliving');Secured('zkeuken');Secured('zinkom');Secured('zgarage');}
 if($Sweg=='On'){Secured('zhalla');Secured('zhallb');}
-if($Spirliving!='Off'||$Spirliving!='Off')Motion('zliving');
-if($Spirkeuken!='Off')Motion('zkeuken');
-if($Spirinkom!='Off')Motion('zinkom');
-if($Spirgarage!='Off')Motion('zgarage');
-if($Spirhall!='Off'){Motion('zhalla');Motion('zhallb');}
-if($STbelknop>$eendag)Timestamp('belknop',270);
-if($STpirgarage>$eendag)Timestamp('pirgarage',0);
-if($STpirliving>$eendag)Timestamp('pirliving',0);
-if($STpirlivingR>$eendag)Timestamp('pirlivingR',0);
-if($STpirkeuken>$eendag)Timestamp('pirkeuken',0);
-if($STpirinkom>$eendag)Timestamp('pirinkom',0);
-if($STpirhall>$eendag)Timestamp('pirhall',0);
-if($STachterdeur>$eendag)Timestamp('achterdeur',270);
-if($STpoort>$eendag)Timestamp('poort',90);
-if($STraamliving>$eendag)Timestamp('raamliving',270);
-if($STraamtobi>$eendag)Timestamp('raamtobi',270);
-if($STraamalex>$eendag)Timestamp('raamalex',270);
-if($STraamkamer>$eendag)Timestamp('raamkamer',90);
-if($STdeurbadkamer>$eendag)Timestamp('deurbadkamer',90);
-if($Spoort!='Closed')
-	echo '
+if(apcu_fetch('spirliving')=='On')Motion('zliving');
+if(apcu_fetch('spirkeuken')=='On')Motion('zkeuken');
+if(apcu_fetch('spirinkom')=='On')Motion('zinkom');
+if(apcu_fetch('spirgarage')=='On')Motion('zgarage');
+if(apcu_fetch('spirhall')=='On'){Motion('zhalla');Motion('zhallb');}
+if(apcu_fetch('tbelknop')>$eendag)Timestamp('belknop',270);
+if(apcu_fetch('tpirgarage')>$eendag)Timestamp('pirgarage',0);
+if(apcu_fetch('tpirliving')>$eendag)Timestamp('pirliving',0);
+if(apcu_fetch('tpirkeuken')>$eendag)Timestamp('pirkeuken',0);
+if(apcu_fetch('tpirinkom')>$eendag)Timestamp('pirinkom',0);
+if(apcu_fetch('tpirhall')>$eendag)Timestamp('pirhall',0);
+if(apcu_fetch('tachterdeur')>$eendag)Timestamp('achterdeur',270);
+if(apcu_fetch('tpoort')>$eendag)Timestamp('poort',90);
+if(apcu_fetch('traamliving')>$eendag)Timestamp('raamliving',270);
+if(apcu_fetch('traamtobi')>$eendag)Timestamp('raamtobi',270);
+if(apcu_fetch('traamalex')>$eendag)Timestamp('raamalex',270);
+if(apcu_fetch('traamkamer')>$eendag)Timestamp('raamkamer',90);
+if(apcu_fetch('tdeurbadkamer')>$eendag)Timestamp('deurbadkamer',90);
+if(apcu_fetch('spoort')=='Open')echo '
 	<div class="fix poort">
 	</div>';
-if($Sachterdeur!='Closed')
-	echo '
+if(apcu_fetch('sachterdeur')=='Closed')echo '
 	<div class="fix achterdeur">
 	</div>';
-if($Sraamliving!='Closed')
-	echo '
+if(apcu_fetch('sraamliving')=='Open')echo '
 	<div class="fix raamliving">
 	</div>';
-if($Sraamtobi!='Closed')
-	echo '
+if(apcu_fetch('sraamtobi')=='Open')echo '
 	<div class="fix raamtobi">
 	</div>';
-if($Sraamalex!='Closed')
-	echo '
+if(apcu_fetch('sraamalex')=='Open')echo '
 	<div class="fix raamalex">
 	</div>';
-if($Sraamkamer!='Closed')
-	echo '
+if(apcu_fetch('sraamkamer')=='Open')echo '
 	<div class="fix raamkamer">
 	</div>';
-if($Sdeurbadkamer!='Closed')
-	echo '
+if(apcu_fetch('sdeurbadkamer')=='Open')echo '
 	<div class="fix deurbadkamer">
 	</div>';
 $total=microtime(true)-$start;
 echo '
 	<div class="fix floorplanstats">
-		'.$udevice.' | D  '.number_format(($domotime*1000),1).' | P  '.number_format((($total-$domotime)*1000),1).' | T  '.number_format(($total*1000),1).'
+		'.$udevice.' | D  '.number_format(($domotime*1000),3).' | P  '.number_format((($total-$domotime)*1000),3).' | T  '.number_format(((microtime(true)-$start)*1000),3).'
 	</div>';
-if(isset($_REQUEST['setdimmer']))
-{
+if(isset($_REQUEST['setdimmer'])){
 	$name=$_REQUEST['setdimmer'];
 	echo '
 	<div id="D'.$name.'" class="fix dimmer" >
@@ -333,13 +253,10 @@ if(isset($_REQUEST['setdimmer']))
 				</div>
 				<div class="fix z" style="top:210px;left:10px;">';
 			$levels=array(1,2,3,4,5,6,7,8,9,10,12,14,16,18,20,22,24,26,28,30,32,35,40,45,50,55,60,65,70,75,80,85,90,95,100);
-			foreach($levels as $level)
-			{
-				if(${'Dlevel'.$name}==$level)
-					echo '
+			foreach($levels as $level){
+				if(${'Dlevel'.$name}==$level)echo '
 					<input type="submit" name="dimlevel" value="'.$level.'"/ class="dimlevel dimlevela">';
-				else
-					echo '
+				else echo '
 					<input type="submit" name="dimlevel" value="'.$level.'" class="dimlevel"/>';
 			}
 			echo '
@@ -363,13 +280,8 @@ if(isset($_REQUEST['setdimmer']))
 }else
 	echo '<div><br/><br/><br/><a href=""><h1>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Geen verbinding met Domoticz</h1></a></div>';
 }
-else
-{
-	header("Location: index.php");
-	die("Redirecting to: index.php");
-}
+else{header("Location: index.php");die("Redirecting to: index.php");}
 ?>
-
 		<script type="text/javascript">
 			function toggle_visibility(id){
 				var e=document.getElementById(id);
