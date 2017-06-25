@@ -4,7 +4,7 @@ require "secure/settings.php";
 require "secure/functions.php"; 
 require "scripts/chart.php";
 if($home === true) {
-	$db = new mysqli('localhost', 'kodi', 'kodi', 'domotica');
+	$db = new mysqli('server', 'user', 'password', 'database');
 	if($db->connect_errno > 0){ die('Unable to connect to database [' . $db->connect_error . ']');}
 	echo '<div style="width:90%">';
 	$sensor = 147;
