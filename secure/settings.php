@@ -69,9 +69,9 @@ function koekje($user,$expirytime){
 }
 function telegram($msg,$silent=true,$to=1){
 	$msg=str_replace('__',PHP_EOL,$msg);
-	$telegrambot='113592115:AAEZ-xCRhO-RBfUqICiJs8q9A_3YIr9irxI';
-	$telegramchatid=55975443;
-	$telegramchatid2=78239354;
+	$telegrambot='123456789:AAEZ-xCRhO-RBfUqICiJs8q9A_3YIr9irxI';
+	$telegramchatid=123456789;
+	$telegramchatid2=123456789;
 	for($x=1;$x<=10;$x++){
 		$result=json_decode(file_get_contents('https://api.telegram.org/bot'.$telegrambot.'/sendMessage?chat_id='.$telegramchatid.'&text='.urlencode($msg).'&disable_notification='.$silent),true);
 		if(isset($result['ok']))
