@@ -1,7 +1,7 @@
 # PHP-Custom-Floorplan-for-Domoticz
 PHP Custom Floorplan and scripting for Domoticz
 
-<img src="https://egregius.be/wp-content/2015/11/Floorplan.png"/>
+<img src="https://egregius.be/wp-content/2016/12/Schermafbeelding-2016-12-06-om-06.22.42.png"/>
 
 ## Requirements
 https://github.com/Egregius/LUA-Pass2PHP-for-Domoticz<br>
