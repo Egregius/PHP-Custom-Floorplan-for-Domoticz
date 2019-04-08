@@ -1,3 +1,6 @@
+DEPRECATED
+SEE https://github.com/Egregius/PHP-Floorplan-and-advanced-automation-for-Domoticz
+
 # PHP-Custom-Floorplan-for-Domoticz
 PHP Custom Floorplan and scripting for Domoticz
 
